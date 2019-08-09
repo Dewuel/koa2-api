@@ -8,9 +8,9 @@ class UserController {
    * @param {*} ctx 
    * @returns {Promise.<void>}
    */
-  static async signup(ctx,next) {
+  static async signup(ctx) {
     const { email, name, password, avatar } = ctx.request.body
-    console.log(email, name, password, avatar);
+    // console.log(email, name, password, avatar);
     await User.create({ email, name, password, avatar }).then((res) => {
       ctx.status = 200
       ctx.body = {
@@ -27,11 +27,11 @@ class UserController {
         data: err
       }
     })
-    await next()
   }
 
-  static async signin(ctx,next) {
+  static async signin(ctx) {
     const { email, password } = ctx.request.body
+    console.log(email,password)
     await User.findOne({ email }, (err, res) => {
       if (err) throw err
       // User.comparePassword
@@ -58,11 +58,12 @@ class UserController {
           }
         }
       })
+    }).catch(err => {
+      console.log(err)
     })
-  await next()
   }
 
-  static async getUser(ctx, next) {
+  static async getUser(ctx) {
     const auth = ctx.request.header.authorization;
     if (auth) {
       let decode = checkToken(auth)
@@ -73,14 +74,19 @@ class UserController {
           ctx.body = {
             code: 200,
             msg: '获取成功',
-            data: res
+            data: {
+              id: res._id,
+              name: res.name,
+              email: res.email,
+              avatar: res.avatar
+            }
           }
         })
       } catch (err) {
         ctx.status = 408
         ctx.body = {
           code: 408,
-          msg: '请重新登录',
+          msg: 'Token已失效，请重新登录',
           data: err
         }
       }
@@ -91,7 +97,6 @@ class UserController {
         msg: 'token不存在'
       }
     }
-    await next()
   }
 }
 module.exports = UserController

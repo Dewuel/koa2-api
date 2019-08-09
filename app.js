@@ -4,7 +4,7 @@ const app = new Koa()
 const router = new Router()
 
 const views = require('koa-views')
-const co = require('co')
+// const co = require('co')
 const convert = require('koa-convert')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
@@ -16,7 +16,7 @@ const mongoose = require('mongoose');
 const cors = require('koa2-cors')
 
 const config = require('./config')
-require('./routes/todo')(router)
+// require('./routes/todo')(router)
 require('./routes/user')(router)
 
 const port = config.port || process.env.PORT

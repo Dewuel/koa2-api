@@ -25,19 +25,7 @@ const UserSchema = new Schema({
     required: true,
     default: 1 // 1=>正常, 2=>异常
   },
-  // createAt: {
-  //   type: Date,
-  //   default: Date.now()
-  // },
-  // updateAt: {
-  //   type: Date,
-  //   default: Date.now()
-  // }
 },{
-  // timestamps: {
-  //   createdAt: 'createTime',
-  //   updatedAt: 'updateTime',
-  // },
   timestamps: true
 })
 

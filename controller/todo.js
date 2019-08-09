@@ -8,22 +8,28 @@ class Todos {
    */
   static async addTodo(ctx) {
     const { todo } = ctx.request.body
+    console.log(todo)
     const auth = ctx.request.header.authorization;
     if (auth) {
       let decode = checkToken(auth)
-      console.log(decode)
-      let newTodo = new Todo({
-        todo: todo,
-        userId: decode.id
-      })
-      try {
-        await newTodo.save((err, res) => {
-          if (err) throw (err)
-          console.log(res)
-        })
-      } catch (err) {
+      // let newTodo = new Todo({
+      //   todo: todo,
+      //   userId: decode.id
+      // })
+
+      await Todo.create({ todo: todo, userId: decode.id }).then(res => {
+        ctx.status = 200
+        ctx.body = {
+          code: 200,
+          msg: '添加成功',
+          data: {
+            id: res._id,
+            todo: res.todo
+          }
+        }
+      }).catch(err => {
         console.log(err)
-      }
+      })
     } else {
       console.log('token 不存在')
       ctx.status = 401
@@ -39,13 +45,13 @@ class Todos {
    * @param {*} ctx 
    */
   static async removeTodo(ctx) {
-    const {id, uid} = ctx.request.body
+    const { id, uid } = ctx.request.body
     const auth = ctx.request.header.authorization
-    if(auth){
+    if (auth) {
       let decode = checkToken(auth)
-      if(decode.id !== uid) return;
+      if (decode.id !== uid) return;
       try {
-        await Todo.findByIdAndRemove({_id: id}, (err) => {
+        await Todo.findByIdAndRemove({ _id: id }, (err) => {
           if (err) throw err;
           ctx.status = 200
           ctx.body = {
@@ -53,7 +59,7 @@ class Todos {
             msg: '删除成功',
           }
         })
-        
+
       } catch (err) {
         ctx.status = 406
         ctx.body = {
@@ -69,15 +75,15 @@ class Todos {
    * 
    * @param {*} ctx 
    */
-  static async getTodos(ctx){
+  static async getTodos(ctx) {
     const auth = ctx.request.header.authorization
-    const {id} = ctx.request.body
-    if(auth){
+    const { id } = ctx.request.body
+    if (auth) {
       let decode = checkToken(auth)
-      if(decode !== id) return;
+      if (decode !== id) return;
       try {
-        await Todo.find({userId: decode.id},(err, res) => {
-          if(err) throw err;
+        await Todo.find({ userId: decode.id }, (err, res) => {
+          if (err) throw err;
           ctx.status = 200
           ctx.body = {
             code: 200,
@@ -100,15 +106,15 @@ class Todos {
    * 
    * @param {*} ctx 
    */
-  static async updateTodos(ctx){
-    const {id,uid,todo} = ctx.request.body
+  static async updateTodos(ctx) {
+    const { id, uid, todo } = ctx.request.body
     const auth = ctx.request.header.authorization
-    if(auth){
+    if (auth) {
       let decode = checkToken(auth)
-      if(uid!==decode.id) return;
+      if (uid !== decode.id) return;
       try {
-        await Todo.findByIdAndUpdate(id,{todo: todo},(err, res) => {
-          if(err) throw err;
+        await Todo.findByIdAndUpdate(id, { todo: todo }, (err, res) => {
+          if (err) throw err;
           ctx.status = 200;
           ctx.body = {
             code: 200,
@@ -118,11 +124,11 @@ class Todos {
         })
       } catch (err) {
         ctx.status = 406;
-          ctx.body = {
-            code: 406,
-            msg: '修改失败',
-            data: res
-          }
+        ctx.body = {
+          code: 406,
+          msg: '修改失败',
+          data: res
+        }
       }
     }
   }

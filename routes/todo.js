@@ -8,4 +8,4 @@ module.exports = (router) => {
   router.post('/deleteTodo', require('../controller/todo').removeTodo);
   router.post('/getTodos', require('../controller/todo').getTodos);
   router.post('/updateTodo', require('../controller/todo').updateTodos);
-}
+};
