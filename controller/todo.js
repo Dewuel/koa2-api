@@ -3,8 +3,8 @@ const checkToken = require('../scripts/checkToken')
 
 class Todos {
   /**
-   * 
-   * @param {*} ctx 
+   *
+   * @param {*} ctx
    */
   static async addTodo(ctx) {
     const { todo } = ctx.request.body
@@ -41,8 +41,8 @@ class Todos {
   }
 
   /**
-   * 
-   * @param {*} ctx 
+   *
+   * @param {*} ctx
    */
   static async removeTodo(ctx) {
     const { id, uid } = ctx.request.body
@@ -72,12 +72,13 @@ class Todos {
   }
 
   /**
-   * 
-   * @param {*} ctx 
+   *
+   * @param {*} ctx
    */
   static async getTodos(ctx) {
     const auth = ctx.request.header.authorization
-    const { id } = ctx.request.body
+    const { id } = ctx.request.querystring
+    console.log(auth,id)
     if (auth) {
       let decode = checkToken(auth)
       if (decode !== id) return;
@@ -103,8 +104,8 @@ class Todos {
   }
 
   /**
-   * 
-   * @param {*} ctx 
+   *
+   * @param {*} ctx
    */
   static async updateTodos(ctx) {
     const { id, uid, todo } = ctx.request.body

@@ -4,8 +4,8 @@ const checkToken = require('../scripts/checkToken')
 
 class UserController {
   /**
-   * 
-   * @param {*} ctx 
+   *
+   * @param {*} ctx
    * @returns {Promise.<void>}
    */
   static async signup(ctx) {
@@ -44,6 +44,7 @@ class UserController {
             code: 200,
             msg: '登录成功',
             data: {
+              id: res._id,
               name: res.name,
               email: res.email,
               avatar: res.avatar,
