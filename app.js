@@ -25,7 +25,8 @@ const port = config.port || process.env.PORT
 onerror(app)
 mongoose.connect(config.mongodbURI, {
   useNewUrlParser: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useFindAndModify: true
 }).then(() => {
   console.log('mongodb is connected!');
 }).catch(err => {

@@ -47,16 +47,18 @@ class Todos {
   static async removeTodo(ctx) {
     const { id, uid } = ctx.request.body
     const auth = ctx.request.header.authorization
+    console.log(id,uid,auth)
     if (auth) {
       let decode = checkToken(auth)
-      if (decode.id !== uid) return;
+      if (decode.id !== uid) return 'err';
       try {
-        await Todo.findByIdAndRemove({ _id: id }, (err) => {
+        await Todo.findByIdAndRemove({ _id: id }, (err, res) => {
           if (err) throw err;
           ctx.status = 200
           ctx.body = {
             code: 200,
             msg: '删除成功',
+            data: res
           }
         })
 
@@ -77,11 +79,12 @@ class Todos {
    */
   static async getTodos(ctx) {
     const auth = ctx.request.header.authorization
-    const { id } = ctx.request.querystring
-    console.log(auth,id)
+    const { id } = ctx.request.query
+    console.log('id:',auth,id)
     if (auth) {
       let decode = checkToken(auth)
-      if (decode !== id) return;
+      console.log(decode)
+      if (decode.id !== id) return;
       try {
         await Todo.find({ userId: decode.id }, (err, res) => {
           if (err) throw err;
